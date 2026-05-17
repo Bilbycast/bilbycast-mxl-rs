@@ -1,0 +1,6 @@
+[workspace]
+members = ["mxl-rs"]
+# Tell Cargo to leave the vendored upstream alone — it carries its own workspace
+# manifest at vendor/mxl/rust/Cargo.toml which we path-dep into via mxl-rs.
+exclude = ["vendor"]
+resolver = "2"

@@ -1,0 +1,19 @@
+[package]
+name = "mxl-rs"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+publish = false
+description = "Bilbycast wrapper over the dmf-mxl/mxl Media eXchange Layer crate (pinned to v1.0.1)"
+
+[dependencies]
+# Path dep into the vendored upstream workspace. The submodule is pinned to the
+# v1.0.1 tag (Apache-2.0, EBU/Linux Foundation production release, 2026-05-07).
+# See ../CLAUDE.md for the full build prereq list.
+mxl = { path = "../vendor/mxl/rust/mxl" }
+
+[features]
+# Forward upstream's "skip in-build libmxl source build" feature. When enabled,
+# the operator is expected to have libmxl installed system-side and discoverable
+# by bindgen via pkg-config or CMAKE_PREFIX_PATH.
+mxl-not-built = ["mxl/mxl-not-built"]
