@@ -1,3 +1,4 @@
 [submodule "vendor/mxl"]
 	path = vendor/mxl
 	url = https://github.com/dmf-mxl/mxl.git
+	ignore = untracked
