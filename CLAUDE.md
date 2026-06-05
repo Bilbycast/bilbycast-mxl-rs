@@ -90,6 +90,10 @@ Upstream `dmf-mxl/mxl` already ships a `mxl-sys` raw-FFI crate and a `mxl` safe 
 
 The build prereq footprint is materially heavier than other bilbycast wrappers. Most bilbycast-edge installs (contribution-grade workflows, small productions) don't need MXL for 12–24 months. Defaulting off keeps `cargo build` lean for the vast majority of users.
 
+### Crate features
+
+- **`mxl-not-built`** (off by default) — forwards upstream's `mxl/mxl-not-built` flag, which skips building libmxl from the vendored source in-tree. With it enabled, the operator is expected to have libmxl installed system-side and discoverable by bindgen via `pkg-config` or `CMAKE_PREFIX_PATH`. Default off builds libmxl from the pinned submodule.
+
 ### Upstream surface (re-exported via `pub use mxl::*`)
 
 Confirmed at v1.0.1: `MxlApi`, `load_api`, `Error`, `Result`, `FlowReader`, `FlowWriter`, `GrainReader`, `GrainWriter`, `GrainWriteAccess`, `MxlInstance`, `SamplesReader`, `SamplesWriter`, `SamplesWriteAccess`, plus `grain::data::*` and `samples::data::*`.
