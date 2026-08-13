@@ -2,7 +2,7 @@
 
 ## What Is This
 
-Bilbycast wrapper over the EBU / Linux Foundation **Media eXchange Layer (MXL)** Rust crate. Vendors `dmf-mxl/mxl` v1.0.1 as a git submodule, exposes the upstream safe API to bilbycast-edge via a thin `mxl-rs` re-export crate, and is the planned home for bilbycast-specific MXL glue (V210 ↔ planar YUV converters, grain timestamp ↔ MasterClock translation, audio frame slicing per `packet_time_us`).
+Bilbycast wrapper over the EBU / Linux Foundation **Media eXchange Layer (MXL)** Rust crate. Vendors `dmf-mxl/mxl` v1.0.2 as a git submodule, exposes the upstream safe API to bilbycast-edge via a thin `mxl-rs` re-export crate, and is the planned home for bilbycast-specific MXL glue (V210 ↔ planar YUV converters, grain timestamp ↔ MasterClock translation, audio frame slicing per `packet_time_us`).
 
 Same sibling-crate pattern as `bilbycast-libsrt-rs` and `bilbycast-fdk-aac-rs`. Used only when bilbycast-edge is built with `--features mxl` (default off).
 
@@ -10,8 +10,8 @@ Same sibling-crate pattern as `bilbycast-libsrt-rs` and `bilbycast-fdk-aac-rs`. 
 
 | Crate | Role |
 |-------|------|
-| **mxl-rs** | Safe wrapper. Today: `pub use mxl::*` (thin re-export pinned to upstream v1.0.1). Later: bilbycast-specific helpers. The crate bilbycast-edge depends on. |
-| **vendor/mxl** | Git submodule of `dmf-mxl/mxl` pinned to tag `v1.0.1` (Apache-2.0, 2026-05-07). Carries the upstream Rust workspace (`mxl-sys`, `mxl`, `gst-mxl-rs`) and the libmxl C++ source under `lib/`. |
+| **mxl-rs** | Safe wrapper. Today: `pub use mxl::*` (thin re-export pinned to upstream v1.0.2). Later: bilbycast-specific helpers. The crate bilbycast-edge depends on. |
+| **vendor/mxl** | Git submodule of `dmf-mxl/mxl` pinned to tag `v1.0.2` (Apache-2.0, 2026-08-07). Carries the upstream Rust workspace (`mxl-sys`, `mxl`, `gst-mxl-rs`) and the libmxl C++ source under `lib/`. |
 
 ## Build & Test
 
@@ -96,13 +96,13 @@ The build prereq footprint is materially heavier than other bilbycast wrappers. 
 
 ### Upstream surface (re-exported via `pub use mxl::*`)
 
-Confirmed at v1.0.1: `MxlApi`, `load_api`, `Error`, `Result`, `FlowReader`, `FlowWriter`, `GrainReader`, `GrainWriter`, `GrainWriteAccess`, `MxlInstance`, `SamplesReader`, `SamplesWriter`, `SamplesWriteAccess`, plus `grain::data::*` and `samples::data::*`.
+Confirmed at v1.0.2: `MxlApi`, `load_api`, `Error`, `Result`, `FlowReader`, `FlowWriter`, `GrainReader`, `GrainWriter`, `GrainWriteAccess`, `MxlInstance`, `SamplesReader`, `SamplesWriter`, `SamplesWriteAccess`, plus `grain::data::*` and `samples::data::*`.
 
-⚠️ Main-branch upstream re-exports `Rational` and `MXL_DATA_FORMAT_GRAIN_SIZE` at root; the v1.0.1 tag does not. Always consume via the pinned submodule, not main.
+⚠️ Main-branch upstream re-exports `Rational` and `MXL_DATA_FORMAT_GRAIN_SIZE` at root; the v1.0.2 tag does not. Always consume via the pinned submodule, not main.
 
 ## Key Design Constraints
 
-1. **Pinned to v1.0.1.** Always update the `vendor/mxl` submodule via a discrete commit; don't track upstream main.
+1. **Pinned to v1.0.2.** Always update the `vendor/mxl` submodule via a discrete commit; don't track upstream main.
 2. **Feature-gated off in bilbycast-edge.** New `mxl` feature opt-in. Never default-on.
 3. **Apache-2.0 throughout.** Upstream is Apache-2.0; our wrapper carries Apache-2.0. Clean against bilbycast-edge's AGPL-3.0-or-later combined work.
 4. **Never run libmxl C++ build at runtime.** All C++ work happens at `cargo build` time; the resulting binary links libmxl statically (or as a vendored shared library) into bilbycast-edge.
@@ -125,4 +125,4 @@ The full MXL integration plan lives at `bilbycast-edge/docs/mxl-integration-plan
 
 1. **`mxl-sys/build.rs` forgets `BUILD_UTILS=OFF`** — sets BUILD_DOCS/TESTS/TOOLS to OFF but not UTILS, forcing GStreamer-dev as a transitive build prereq even though the utils aren't shipped. File upstream PR or patch in `vendor/mxl/`.
 
-2. **API surface drift between main and v1.0.1** — main re-exports `Rational` and `MXL_DATA_FORMAT_GRAIN_SIZE` at root; v1.0.1 tag does not. Always pin via the submodule.
+2. **API surface drift between main and v1.0.2** — main re-exports `Rational` and `MXL_DATA_FORMAT_GRAIN_SIZE` at root; v1.0.2 tag does not. Always pin via the submodule.
